@@ -6,6 +6,7 @@ import glob
 import skimage.io as io
 import skimage.transform as trans
 from skimage import img_as_ubyte
+from PIL import Image
 
 
 Sky = [128,128,128]
@@ -23,6 +24,15 @@ Unlabelled = [0,0,0]
 
 COLOR_DICT = np.array([Sky, Building, Pole, Road, Pavement,
                           Tree, SignSymbol, Fence, Car, Pedestrian, Bicyclist, Unlabelled])
+
+
+def resize_output_images(path, size):
+    """Resizes the output images from Unet to size"""
+    images = os.listdir(path)
+    for image_dir in images:
+        image = Image.open(path + image_dir)
+        image = image.resize(size)
+        image.save(path + image_dir)
 
 
 def adjustData(img,mask,flag_multi_class,num_class):
