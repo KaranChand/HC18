@@ -7,7 +7,7 @@ import skimage.io as io
 import skimage.transform as trans
 from skimage import img_as_ubyte
 from PIL import Image
-
+import cv2
 
 Sky = [128,128,128]
 Building = [128,0,0]
@@ -94,7 +94,7 @@ def trainGenerator(batch_size,train_path,image_folder,mask_folder,aug_dict,image
 
 
 
-def testGenerator(test_path,num_image = 30,target_size = (256,256),flag_multi_class = False,as_gray = True):
+def testGenerator(test_path,num_image = 335,target_size = (256,256),flag_multi_class = False,as_gray = True):
     for i in range(num_image):
         s = ("000" + str(i))[-3:]
         img = io.imread(os.path.join(test_path,f"{s}_HC.png"),as_gray = as_gray)
@@ -136,3 +136,30 @@ def saveResult(save_path,npyfile,flag_multi_class = False,num_class = 2):
         s = ("000" + str(i))[-3:]
         img = labelVisualize(num_class,COLOR_DICT,item) if flag_multi_class else item[:,:,0]
         io.imsave(os.path.join(save_path,f"{s}_HC_predict.png"),img_as_ubyte(img))
+        
+def fill_labels(folder_dir = "label"):
+  for image in os.listdir(folder_dir):
+      # Read image
+      if (image.endswith(".png")):
+        im_in = cv2.imread(folder_dir + '/' + image, cv2.IMREAD_GRAYSCALE);
+        
+        # Threshold
+        th, im_th = cv2.threshold(im_in, 127, 255, cv2.THRESH_BINARY)
+  
+        # Copy the thresholded image
+        im_floodfill = im_th.copy()
+  
+        # Mask used to flood filling.
+        # NOTE: the size needs to be 2 pixels bigger on each side than the input image
+        h, w = im_th.shape[:2]
+        mask = np.zeros((h+2, w+2), np.uint8)
+  
+        # Floodfill from point (0, 0)
+        cv2.floodFill(im_floodfill, mask, (0,0), 255)
+  
+        # Invert floodfilled image
+        im_floodfill_inv = cv2.bitwise_not(im_floodfill)
+  
+        # Combine the two images to get the foreground
+        im_out = im_th | im_floodfill_inv
+        cv2.imwrite(folder_dir+ '_filled/' + image[:-4]+"_filled.png", im_out)        
