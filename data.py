@@ -30,10 +30,27 @@ def resize_output_images(path, size):
     """Resizes the output images from Unet to size"""
     images = os.listdir(path)
     for image_dir in images:
-        image = Image.open(path + image_dir)
-        image = image.resize(size)
-        image.save(path + image_dir)
-
+        try:
+            image = Image.open(path + image_dir)
+            image = image.resize(size)
+            image.save(path + image_dir)
+        except:
+            print('error loading image')
+            
+def threshold_images(path, threshold):
+    '''Threshold the images to white/black'''
+    images = os.listdir(path)
+    for image_dir in images:
+        try:
+            image = Image.open(path + image_dir)
+            # Grayscale
+            image = image.convert('L')
+            # Threshold
+            image = image.point( lambda p: 255 if p > threshold else 0 )
+            # To mono
+            image = image.convert('1')
+        except:
+            print('error loading image')
 
 def adjustData(img,mask,flag_multi_class,num_class):
     if(flag_multi_class):

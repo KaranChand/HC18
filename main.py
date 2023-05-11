@@ -24,3 +24,5 @@ results = model.predict_generator(HC18_test,335,verbose=1)
 saveResult("data/HC18/test_set/results",results)
 
 resize_output_images('data/HC18/test_set/results/', (800, 540))
+
+threshold_images('data/HC18/test_set/results/', 200)
