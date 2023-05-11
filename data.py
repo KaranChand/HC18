@@ -152,7 +152,7 @@ def saveResult(save_path,npyfile,flag_multi_class = False,num_class = 2):
     for i,item in enumerate(npyfile):
         s = ("000" + str(i))[-3:]
         img = labelVisualize(num_class,COLOR_DICT,item) if flag_multi_class else item[:,:,0]
-        io.imsave(os.path.join(save_path,f"{s}_HC_predict.png"),img_as_ubyte(img))
+        io.imsave(os.path.join(save_path,f"{s}_HC.png"),img_as_ubyte(img))
         
 def fill_labels(folder_dir = "label"):
   for image in os.listdir(folder_dir):
