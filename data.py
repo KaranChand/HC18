@@ -47,7 +47,7 @@ def threshold_images(path, thres):
             _, image = cv2.threshold(np.asarray(image), thres, 255, cv2.THRESH_BINARY)
             # Opening Closing
             image = closing(image)
-            image = opening(image)
+            # image = opening(image)
             # Save
             image = Image.fromarray(image)
             image = image.convert('L')
