@@ -37,20 +37,22 @@ def resize_output_images(path, size):
         except:
             print('error loading image')
             
-def threshold_images(path, threshold):
-    '''Threshold the images to white/black'''
+def threshold_images(path, thres):
+    '''Threshold the images to white/black and opening/closing'''
     images = os.listdir(path)
     for image_dir in images:
-        try:
+        # try:
             image = Image.open(path + image_dir)
             # Grayscale
-            image = image.convert('L')
-            # Threshold
-            image = image.point( lambda p: 255 if p > threshold else 0 )
-            # To mono
-            image = image.convert('1')
-        except:
-            print('error loading image')
+            _, image = cv2.threshold(np.asarray(image), thres, 255, cv2.THRESH_BINARY)
+            # Opening Closing
+            image = opening(image)
+            image = closing(image)
+            # Save
+            image = Image.fromarray(image)
+            image.save(path + image_dir)
+        # except:
+        #     print('error loading image')
 
 def adjustData(img,mask,flag_multi_class,num_class):
     if(flag_multi_class):
@@ -184,8 +186,13 @@ def fill_labels(folder_dir = "label"):
           
 def opening(img):
     kernel = np.ones((5, 5), np.uint8)
-    cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
+    print(img)
+    img = np.asarray(img, dtype=np.float32)
+    print(img)
+    morphed = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
+    print(morphed)
+    return morphed
     
 def closing(img):
     kernel = np.ones((5, 5), np.uint8)
-    cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
+    return cv2.morphologyEx(np.asarray(img, dtype=np.float32), cv2.MORPH_CLOSE, kernel)

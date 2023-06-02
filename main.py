@@ -17,11 +17,11 @@ from data import *
 # model_checkpoint = ModelCheckpoint('unet_HC18.hdf5', monitor='loss',verbose=1, save_best_only=True)
 # model.fit_generator(HC18,steps_per_epoch=50,epochs=3,callbacks=[model_checkpoint])
 
-HC18_test = testGenerator("data/HC18/test_set")
-model = unet()
-model.load_weights("unet_HC18-500-10.hdf5")
-results = model.predict_generator(HC18_test,335,verbose=1)
-saveResult("data/HC18/test_set/results",results)
+# HC18_test = testGenerator("data/HC18/test_set")
+# model = unet()
+# model.load_weights("unet_HC18-500-10.hdf5")
+# results = model.predict_generator(HC18_test,335,verbose=1)
+# saveResult("data/HC18/test_set/results",results)
 
 resize_output_images('data/HC18/test_set/results/', (800, 540))
 
