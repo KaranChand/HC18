@@ -39,9 +39,9 @@ def resize_output_images(path, size):
             image = image.resize(size)
             image.save(path + image_dir)
         except:
-            print('error loading image')
+            print('error loading image in resizing')
             
-def postprocess(path, thres):
+def postprocess(path, thres, openclose):
     '''Threshold the images to white/black and opening/closing
     Args:
         path: path to the images
@@ -54,14 +54,18 @@ def postprocess(path, thres):
             # Grayscale
             _, image = cv2.threshold(np.asarray(image), thres, 255, cv2.THRESH_BINARY)
             # Opening Closing
-            image = opening(image)
-            image = closing(image)
+            if openclose:
+                image = opening(image)
+                image = closing(image)
             # Save
             image = Image.fromarray(image)
             image = image.convert('L')
-            image.save(path + image_dir)
+            if openclose:
+                image.save(path[:-1] + '_openclose/' + image_dir)
+            else:
+                image.save(path[:-1] + '_no-openclose/' + image_dir)
         except:
-            print('error loading image')
+            print('error loading image in postprocess')
 
 def adjustData(img,mask,flag_multi_class,num_class):
     if(flag_multi_class):
