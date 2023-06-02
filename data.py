@@ -179,4 +179,13 @@ def fill_labels(folder_dir = "label"):
   
         # Combine the two images to get the foreground
         im_out = im_th | im_floodfill_inv
+      
         cv2.imwrite(folder_dir+ '_filled/' + image[:-4]+"_filled.png", im_out)        
+          
+def opening(img):
+    kernel = np.ones((5, 5), np.uint8)
+    cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
+    
+def closing(img):
+    kernel = np.ones((5, 5), np.uint8)
+    cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
