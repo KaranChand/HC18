@@ -41,19 +41,19 @@ def threshold_images(path, thres):
     '''Threshold the images to white/black and opening/closing'''
     images = os.listdir(path)
     for image_dir in images:
-        # try:
+        try:
             image = Image.open(path + image_dir)
             # Grayscale
             _, image = cv2.threshold(np.asarray(image), thres, 255, cv2.THRESH_BINARY)
             # Opening Closing
+            image = opening(image)
             image = closing(image)
-            # image = opening(image)
             # Save
             image = Image.fromarray(image)
             image = image.convert('L')
             image.save(path + image_dir)
-        # except:
-        #     print('error loading image')
+        except:
+            print('error loading image')
 
 def adjustData(img,mask,flag_multi_class,num_class):
     if(flag_multi_class):
@@ -186,13 +186,15 @@ def fill_labels(folder_dir = "label"):
         cv2.imwrite(folder_dir+ '_filled/' + image[:-4]+"_filled.png", im_out)        
           
 def opening(img):
-    kernel = np.ones((5, 5), np.uint8)
+    # kernel = np.ones((5, 5), np.uint8)
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
     img = np.asarray(img, dtype=np.float32)
     morphed = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
     return morphed
     
 def closing(img):
-    kernel = np.ones((5, 5), np.uint8)
+    # kernel = np.ones((5, 5), np.uint8)
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
     img = np.asarray(img, dtype=np.float32)
     morphed = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
     return morphed
