@@ -27,7 +27,11 @@ COLOR_DICT = np.array([Sky, Building, Pole, Road, Pavement,
 
 
 def resize_output_images(path, size):
-    """Resizes the output images from Unet to size"""
+    """Resizes the output images from Unet to size
+    Args:
+        path: path to the images
+        size: size of the output images
+    """
     images = os.listdir(path)
     for image_dir in images:
         try:
@@ -37,8 +41,12 @@ def resize_output_images(path, size):
         except:
             print('error loading image')
             
-def threshold_images(path, thres):
-    '''Threshold the images to white/black and opening/closing'''
+def postprocess(path, thres):
+    '''Threshold the images to white/black and opening/closing
+    Args:
+        path: path to the images
+        thres: threshold value
+    '''
     images = os.listdir(path)
     for image_dir in images:
         try:
@@ -158,6 +166,7 @@ def saveResult(save_path,npyfile,flag_multi_class = False,num_class = 2):
         io.imsave(os.path.join(save_path,f"{s}_HC.png"),img_as_ubyte(img))
         
 def fill_labels(folder_dir = "label"):
+  '''Fill in the label ellipses'''
   for image in os.listdir(folder_dir):
       # Read image
       if (image.endswith(".png")):
@@ -186,14 +195,24 @@ def fill_labels(folder_dir = "label"):
         cv2.imwrite(folder_dir+ '_filled/' + image[:-4]+"_filled.png", im_out)        
           
 def opening(img):
-    # kernel = np.ones((5, 5), np.uint8)
+    ''' Opening morphological transformation
+    Input:
+        img: input image
+    Output:
+        morphed: output image
+    '''
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
     img = np.asarray(img, dtype=np.float32)
     morphed = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
     return morphed
     
 def closing(img):
-    # kernel = np.ones((5, 5), np.uint8)
+    ''' Closing morphological transformation
+    Input:
+        img: input image
+    Output:
+        morphed: output image
+    '''
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
     img = np.asarray(img, dtype=np.float32)
     morphed = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
