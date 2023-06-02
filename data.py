@@ -50,6 +50,7 @@ def threshold_images(path, thres):
             image = closing(image)
             # Save
             image = Image.fromarray(image)
+            image = image.convert('L')
             image.save(path + image_dir)
         # except:
         #     print('error loading image')
@@ -186,13 +187,12 @@ def fill_labels(folder_dir = "label"):
           
 def opening(img):
     kernel = np.ones((5, 5), np.uint8)
-    print(img)
     img = np.asarray(img, dtype=np.float32)
-    print(img)
     morphed = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
-    print(morphed)
     return morphed
     
 def closing(img):
     kernel = np.ones((5, 5), np.uint8)
-    return cv2.morphologyEx(np.asarray(img, dtype=np.float32), cv2.MORPH_CLOSE, kernel)
+    img = np.asarray(img, dtype=np.float32)
+    morphed = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
+    return morphed
