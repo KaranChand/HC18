@@ -10,4 +10,6 @@ Post-processing and ellipse fitting is automatically also ran, the results of wh
 Getting the csv with ellipse descriptors is done by running `ellipse_fit.ipynb'
 
 --- 
-Pre-trained model we used for segmentation (500 steps/epoch, 10 epochs) is available here: https://we.tl/t-XQ02jrhBzG
+Pre-trained U-net model we used for segmentation (500 steps/epoch, 10 epochs) is available here: https://we.tl/t-XQ02jrhBzG
+
+Pre-trained nnU-net model we used is available here: https://we.tl/t-ypyihrv10R
